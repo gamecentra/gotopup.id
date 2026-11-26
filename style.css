@@ -1,220 +1,123 @@
 
-/* ==============================
-   BAGIAN 1/7 — RESET & DASAR
-================================ */
 :root {
-  --blue: #209bd2;
-  --blue-dark: #137eae;
-  --blue-light: #e8f7ff;
-  --background: #eaf8ff;
-  --text: #203b4a;
-  --muted: #8296a0;
-  --white: #ffffff;
-  --border: #e4edf1;
-  --green: #16b77b;
-  --shadow: 0 8px 25px rgba(37, 119, 155, .08);
-  --radius: 22px;
+  --blue: #229bd0;
+  --blue-dark: #147da9;
+  --blue-light: #e5f6ff;
+  --text: #203b49;
+  --muted: #8499a3;
+  --white: #fff;
+  --border: #e5edf1;
+  --shadow: 0 8px 25px rgba(34, 120, 160, .08);
+  --radius: 24px;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; }
 
 html {
   scroll-behavior: smooth;
+  background: var(--blue-light);
 }
 
 body {
-  min-height: 100vh;
-  padding-bottom: 100px;
-  background: linear-gradient(150deg, #eaf8ff, #dff4ff);
+  margin: 0;
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(145deg, #eaf8ff, #dff4ff);
+  padding-bottom: 94px;
 }
 
-button, input {
-  font: inherit;
-}
+button, input { font: inherit; }
+button { cursor: pointer; }
+a { color: inherit; text-decoration: none; }
 
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-.page {
-  display: none;
-  width: 100%;
-  max-width: 1100px;
-  margin: auto;
-  padding: 26px;
-  min-height: 60vh;
-}
-
-.page.active {
-  display: block;
-}
-
-.content-section {
-  margin-top: 32px;
-}
-
-.section-heading {
-  margin-bottom: 20px;
-}
-
-.section-heading h2 {
-  font-size: 27px;
-  margin-bottom: 8px;
-}
-
-.section-heading p,
-.page-heading p {
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.section-heading-row {
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  min-height: 112px;
+  padding: 17px 5%;
+  background: rgba(255,255,255,.97);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  box-shadow: 0 2px 12px rgba(20,80,110,.04);
 }
 
-/* ==============================
-   BAGIAN 2/7 — HEADER & LOGO
-================================ */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
-  min-height: 118px;
-  padding: 18px max(26px, calc((100% - 1050px) / 2));
-  background: rgba(255,255,255,.96);
+.brand {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  box-shadow: 0 3px 15px rgba(0,0,0,.035);
-}
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  gap: 14px;
   min-width: 0;
 }
 
-.site-logo {
-  width: 70px;
-  height: 70px;
+.brand img {
+  width: 76px;
+  height: 76px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 17px;
 }
 
-.brand-text h1 {
-  font-size: 27px;
-  font-weight: 800;
-  letter-spacing: -.6px;
+.brand strong {
+  display: block;
+  font-size: clamp(20px, 5vw, 31px);
+  letter-spacing: -.7px;
 }
 
-.brand-text p {
+.brand small {
+  display: block;
   margin-top: 8px;
-  color: #8a9aa2;
-  font-size: 14px;
+  color: #8a9ca4;
+  font-size: 12px;
   letter-spacing: 2px;
 }
 
-.header-help {
-  background: #eaf8ff;
+.help-button {
+  padding: 14px 18px;
   color: var(--blue-dark);
-  border-radius: 30px;
-  padding: 15px 22px;
   font-weight: 700;
+  border-radius: 30px;
+  background: #eaf8ff;
   white-space: nowrap;
 }
 
-.header-help:hover {
-  background: #d8f1ff;
+.page { display: none; min-height: 70vh; }
+.page.active { display: block; }
+
+.home-content, .page-content {
+  width: min(100%, 1120px);
+  margin: auto;
+  padding: 28px 4% 50px;
 }
 
-.welcome-banner {
-  margin-top: 26px;
-  min-height: 130px;
-  padding: 25px 32px;
-  border-radius: 28px;
-  background: linear-gradient(110deg, #168ecb, #55c9f5);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.banner-section { margin: 20px 0 36px; }
+.banner-window {
   overflow: hidden;
-}
-
-.welcome-banner h2 {
-  font-size: 25px;
-  margin-bottom: 12px;
-}
-
-.welcome-banner p {
-  font-size: 17px;
-}
-
-.welcome-banner img {
-  width: 95px;
-  height: 95px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-/* ==============================
-   BAGIAN 3/7 — SLIDER & KATEGORI
-================================ */
-.banner-slider {
+  border-radius: 27px;
   width: 100%;
-  position: relative;
-  overflow: hidden;
-  border-radius: 25px;
-  margin: 25px 0;
-  background: #d8effa;
+  aspect-ratio: 16 / 6;
+  background: #d6effb;
 }
 
 .banner-track {
+  height: 100%;
   display: flex;
-  width: 100%;
-  transition: transform .55s ease;
+  transition: transform .65s ease;
 }
 
-.banner-slide {
-  flex: 0 0 100%;
-  width: 100%;
-}
-
+.banner-slide { flex: 0 0 100%; min-width: 100%; }
 .banner-slide img {
+  display: block;
   width: 100%;
-  aspect-ratio: 16 / 6;
+  height: 100%;
   object-fit: cover;
 }
 
 .banner-dots {
-  position: absolute;
-  bottom: 12px;
-  left: 0;
-  right: 0;
   display: flex;
   justify-content: center;
   gap: 8px;
+  margin-top: 12px;
 }
 
 .banner-dot {
@@ -222,305 +125,284 @@ img {
   height: 8px;
   border: 0;
   border-radius: 20px;
-  background: rgba(255,255,255,.65);
+  background: #a8cbdc;
+  padding: 0;
 }
 
-.banner-dot.active {
-  width: 23px;
-  background: white;
-}
+.banner-dot.active { width: 24px; background: var(--blue); }
 
-.main-category-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
+.home-section { margin: 38px 0 46px; }
 
-.main-category-card {
-  min-height: 150px;
-  border: 1px solid rgba(255,255,255,.8);
-  border-radius: 25px;
-  background: white;
-  color: var(--text);
-  box-shadow: var(--shadow);
+.section-heading {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 15px;
-  font-size: 18px;
-  font-weight: 700;
-  transition: .2s;
+  gap: 12px;
+  margin-bottom: 19px;
 }
 
-.main-category-card:hover,
-.game-card:hover,
-.product-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(37,119,155,.13);
+.section-heading h2 {
+  margin: 0;
+  font-size: clamp(23px, 5vw, 31px);
 }
 
-.category-icon {
-  font-size: 42px;
+.section-heading p {
+  margin: 8px 0 0;
+  color: var(--muted);
 }
 
-.text-button {
+.text-link {
   border: 0;
   background: transparent;
   color: var(--blue-dark);
   font-weight: 700;
-  font-size: 16px;
+  white-space: nowrap;
 }
 
-.popular-game-grid,
-.game-list-grid {
+.home-game-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
+  gap: 15px;
 }
 
 .game-card {
   min-width: 0;
-  padding: 15px 12px;
-  border: 0;
-  border-radius: 24px;
-  background: white;
-  color: #172c36;
+  padding: 13px 10px 15px;
+  border: 1px solid rgba(225,238,244,.8);
+  border-radius: 23px;
+  background: #fff;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  text-align: center;
-  transition: .2s;
+  gap: 11px;
+  color: #182f3a;
+  transition: transform .2s, box-shadow .2s;
 }
+
+.game-card:active { transform: scale(.97); }
 
 .game-card img {
   width: 100%;
-  max-width: 120px;
+  max-width: 112px;
   aspect-ratio: 1;
-  border-radius: 17px;
   object-fit: cover;
+  border-radius: 18px;
+  background: #edf7fb;
 }
 
 .game-card span {
+  min-height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   font-weight: 600;
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 1.35;
 }
 
-/* ==============================
-   BAGIAN 4/7 — DAFTAR & PRODUK
-================================ */
-.page-heading {
+.page-title-row {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin: 12px 0 28px;
+  gap: 17px;
+  margin: 20px 0 30px;
 }
 
-.page-heading h2 {
-  font-size: 30px;
-  margin-bottom: 9px;
+.page-title-row h1 {
+  margin: 0;
+  font-size: clamp(26px, 6vw, 36px);
+}
+
+.page-title-row p {
+  margin: 8px 0 0;
+  color: var(--muted);
 }
 
 .back-button {
-  flex: 0 0 70px;
-  width: 70px;
-  height: 70px;
+  flex: 0 0 62px;
+  width: 62px;
+  height: 62px;
   border: 0;
   border-radius: 20px;
   color: var(--blue-dark);
   background: white;
-  font-size: 35px;
+  font-size: 34px;
   box-shadow: var(--shadow);
 }
 
 .search-box {
   display: flex;
   align-items: center;
-  gap: 15px;
-  min-height: 72px;
-  background: white;
+  gap: 14px;
+  min-height: 70px;
+  padding: 0 22px;
+  margin-bottom: 24px;
+  background: #fff;
   border: 1px solid var(--border);
-  border-radius: 22px;
-  padding: 0 24px;
-  margin-bottom: 25px;
-}
-
-.search-box span {
-  font-size: 28px;
+  border-radius: 23px;
   color: var(--blue);
+  font-size: 27px;
 }
 
-.search-box input,
-.discount-input-row input {
+.search-box input {
   width: 100%;
   border: 0;
   outline: 0;
+  color: var(--text);
   background: transparent;
   font-size: 17px;
-  min-width: 0;
 }
 
-.filter-tabs,
-.subcategory-list {
+.filter-row, .subcategory-list {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   overflow-x: auto;
-  padding: 8px 2px 15px;
-  scrollbar-width: thin;
+  padding: 2px 0 14px;
+  scrollbar-width: none;
 }
 
-.filter-tab,
-.subcategory-button {
+.filter-chip, .subcategory-button {
   flex: 0 0 auto;
-  padding: 14px 23px;
   border: 1px solid var(--border);
-  border-radius: 30px;
-  color: var(--muted);
   background: white;
+  color: var(--muted);
+  border-radius: 30px;
+  padding: 12px 20px;
 }
 
-.filter-tab.active,
-.subcategory-button.active {
-  color: white;
+.filter-chip.active, .subcategory-button.active {
   background: var(--blue);
+  color: white;
   border-color: var(--blue);
 }
 
-.game-detail-header {
+.listing-grid { margin-top: 10px; }
+
+.selected-game-banner {
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 20px;
+  gap: 16px;
+  padding: 17px;
+  margin-bottom: 20px;
   background: white;
-  border-radius: 22px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 
-.game-detail-header img {
-  width: 85px;
-  height: 85px;
+.selected-game-banner img {
+  width: 76px;
+  height: 76px;
+  border-radius: 18px;
   object-fit: cover;
-  border-radius: 16px;
 }
 
-.subsection-title {
-  margin-bottom: 15px;
-  font-size: 20px;
+.selected-game-banner strong, .selected-game-banner small { display: block; }
+.selected-game-banner strong { font-size: 19px; }
+.selected-game-banner small { margin-top: 7px; color: var(--muted); }
+
+.panel {
+  padding: 22px;
+  margin: 18px 0;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.panel h2 { margin: 0 0 9px; font-size: 20px; }
+.muted, .small-note { color: var(--muted); }
+.small-note { font-size: 13px; }
+
+.account-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.account-fields label, .field-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.account-fields input, .discount-row input {
+  min-width: 0;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  outline: none;
+  background: #fbfdff;
+}
+
+.account-fields input:focus, .discount-row input:focus {
+  border-color: var(--blue);
 }
 
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 13px;
+  gap: 12px;
+  margin-top: 18px;
 }
 
 .product-card {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  padding: 17px;
-  border: 2px solid transparent;
-  border-radius: 19px;
-  background: white;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+  min-height: 105px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  background: #fff;
   color: var(--text);
   text-align: left;
-  box-shadow: var(--shadow);
-  transition: .2s;
 }
 
 .product-card.selected {
-  border-color: var(--blue);
-  background: #f1fbff;
+  border: 2px solid var(--blue);
+  background: #effaff;
 }
 
-.product-card strong {
-  font-size: 15px;
-}
+.product-price { color: var(--blue-dark); font-weight: 800; }
+.product-card .small-note { margin: 0; }
 
-.product-card .product-price {
-  color: var(--blue-dark);
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.account-input-section,
-.order-summary,
-.checkout-card {
-  margin-top: 22px;
-  padding: 23px;
-  border-radius: 23px;
-  background: white;
-  box-shadow: var(--shadow);
-}
-
-#gameAccountFields {
-  display: grid;
-  gap: 13px;
-}
-
-#gameAccountFields label {
-  display: grid;
-  gap: 8px;
-  font-weight: 600;
-}
-
-#gameAccountFields input,
-#gameAccountFields select {
-  width: 100%;
-  min-height: 52px;
-  padding: 12px 15px;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  outline-color: var(--blue);
-  background: white;
-}
-
-.summary-row {
+.summary-line, .summary-total {
   display: flex;
   justify-content: space-between;
-  gap: 15px;
+  gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid var(--border);
 }
 
-.summary-row strong {
-  text-align: right;
-  overflow-wrap: anywhere;
-}
+.summary-line span { color: var(--muted); }
+.summary-line strong { text-align: right; overflow-wrap: anywhere; }
 
-.total-row {
-  font-size: 19px;
-  border-bottom: 0;
-  padding-top: 18px;
-}
-
-/* ==============================
-   BAGIAN 5/7 — CHECKOUT & AKUN
-================================ */
-.primary-button,
-.secondary-button {
-  min-height: 52px;
+.summary-total {
+  margin: 8px 0 18px;
   border: 0;
-  border-radius: 15px;
-  padding: 13px 20px;
-  font-weight: 700;
-  text-align: center;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 19px;
+  font-weight: 800;
 }
+
+.discount-row { display: flex; gap: 9px; margin-top: 9px; }
 
 .primary-button {
-  width: 100%;
-  margin-top: 17px;
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 19px;
   color: white;
-  background: var(--blue);
-}
-
-.primary-button:hover {
-  background: var(--blue-dark);
+  background: linear-gradient(110deg, #168fc4, #36b7e6);
+  font-weight: 800;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .primary-button:disabled {
@@ -528,491 +410,241 @@ img {
   cursor: not-allowed;
 }
 
-.secondary-button {
-  color: var(--blue-dark);
-  background: var(--blue-light);
-}
-
-.discount-input-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 15px;
-  padding: 9px 10px 9px 15px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-}
-
-.form-message {
-  margin-top: 10px;
-  color: var(--blue-dark);
-  font-size: 14px;
-}
-
-.payment-method {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 17px 0;
-}
-
-.qris-label {
-  color: #176f9b;
-  font-weight: 900;
-  font-size: 22px;
-}
-
-.qris-container {
-  display: flex;
-  justify-content: center;
-  padding: 15px;
-  border-radius: 18px;
-  background: #f8fcff;
-}
-
-.qris-container img {
-  width: min(100%, 320px);
-  object-fit: contain;
-  border-radius: 10px;
-}
-
-.payment-note,
-.small-note {
-  margin-top: 14px;
-  color: var(--muted);
-  font-size: 14px;
+.full-button { width: 100%; margin-top: 17px; }
+.payment-note {
+  padding: 13px;
+  border-radius: 12px;
+  color: #58717d;
+  background: #eff9fd;
+  font-size: 13px;
   line-height: 1.6;
 }
 
 .profile-card {
-  padding: 30px 20px;
-  border-radius: 26px;
-  background: white;
+  padding: 32px 18px;
   text-align: center;
+  background: white;
+  border-radius: 25px;
   box-shadow: var(--shadow);
 }
 
-.profile-avatar {
-  width: 115px;
-  height: 115px;
-  margin: 0 auto 25px;
-  border-radius: 50%;
+.avatar {
   display: grid;
   place-items: center;
+  width: 94px;
+  height: 94px;
+  margin: auto;
+  border-radius: 50%;
   color: white;
   background: var(--blue);
-  font-size: 55px;
+  font-size: 44px;
 }
 
-.profile-card h2 {
-  font-size: 25px;
-  margin-bottom: 8px;
-}
+.profile-card h2 { margin: 18px 0 5px; }
+.profile-card p { margin: 0; color: var(--muted); }
 
-.account-menu-card {
-  margin-top: 22px;
-  padding: 12px 22px;
-  border-radius: 25px;
+.account-menu {
+  padding: 8px 20px;
+  margin-top: 20px;
   background: white;
+  border-radius: 23px;
   box-shadow: var(--shadow);
 }
 
-.account-menu-item {
+.account-menu a, .account-menu button {
   width: 100%;
-  min-height: 75px;
   display: flex;
   align-items: center;
-  gap: 13px;
+  gap: 12px;
+  padding: 20px 0;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: transparent;
   color: var(--text);
   text-align: left;
-  font-size: 18px;
+  font-size: 17px;
 }
 
-.account-menu-item:last-child {
-  border-bottom: 0;
-}
-
-.menu-arrow {
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 25px;
-}
-
-.order-history-list {
-  display: grid;
-  gap: 14px;
-}
-
+.account-menu a:last-child, .account-menu button:last-child { border-bottom: 0; }
+.account-menu b { margin-left: auto; color: #9aabb3; }
 .order-history-card {
-  padding: 20px;
-  border-radius: 20px;
+  padding: 18px;
+  margin: 13px 0;
+  border-radius: 18px;
   background: white;
   box-shadow: var(--shadow);
 }
+.order-history-card p { margin: 8px 0; overflow-wrap: anywhere; }
+.order-status { color: #bd7a17; font-size: 13px; }
 
-.order-status {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 7px 12px;
-  border-radius: 20px;
-  background: #fff2d9;
-  color: #94620c;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.empty-state {
-  padding: 45px 20px;
-  text-align: center;
-  background: white;
-  border-radius: 22px;
-}
-
-.empty-state span {
-  font-size: 42px;
-}
-
-/* ==============================
-   BAGIAN 6/7 — MODAL & FOOTER
-================================ */
-.modal-overlay {
+.bottom-nav {
   position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  background: rgba(13,37,51,.58);
-}
-
-.modal-overlay.show {
-  display: flex;
-}
-
-.modal-box {
-  position: relative;
-  width: min(100%, 440px);
-  max-height: 85vh;
-  overflow-y: auto;
-  padding: 30px 24px;
-  border-radius: 25px;
-  background: white;
-  text-align: center;
-  box-shadow: 0 20px 70px rgba(0,0,0,.2);
-}
-
-.modal-box h2 {
-  margin: 12px 0;
-}
-
-.modal-box p {
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 17px;
-  width: 35px;
-  height: 35px;
-  border: 0;
-  border-radius: 50%;
-  background: #eef7fb;
-  font-size: 25px;
-}
-
-.modal-icon {
-  width: 65px;
-  height: 65px;
-  margin: auto;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--blue);
-  color: white;
-  font-size: 35px;
-}
-
-.modal-logo {
-  width: 75px;
-  height: 75px;
-  margin: auto;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-.discount-info-code {
-  margin: 20px 0;
-  padding: 17px;
-  border: 2px dashed var(--blue);
-  border-radius: 15px;
-  color: var(--blue-dark);
-  font-size: 25px;
-  font-weight: 900;
-  letter-spacing: 2px;
-}
-
-.modal-order-info {
-  margin-top: 17px;
-  padding: 15px;
-  border-radius: 14px;
-  background: #f2faff;
-  text-align: left;
-  line-height: 1.8;
-}
-
-.toast-message {
-  position: fixed;
-  left: 50%;
-  bottom: 105px;
-  z-index: 150;
-  max-width: calc(100% - 35px);
-  padding: 13px 20px;
-  border-radius: 30px;
-  background: #203b4a;
-  color: white;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, 15px);
-  transition: .25s;
-}
-
-.toast-message.show {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
-.floating-help {
-  position: fixed;
-  right: 22px;
-  bottom: 115px;
-  z-index: 60;
-  width: 65px;
-  height: 65px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--green);
-  color: white;
-  font-size: 30px;
-  box-shadow: 0 7px 20px rgba(0,0,0,.15);
-}
-
-.site-footer {
-  padding: 45px 20px 120px;
-  text-align: center;
-  color: var(--muted);
-}
-
-.footer-logo {
-  width: 75px;
-  height: 75px;
-  margin: 0 auto 15px;
-  border-radius: 12px;
-  object-fit: cover;
-}
-
-.site-footer h3 {
-  margin-bottom: 12px;
-  color: var(--blue-dark);
-}
-
-.site-footer p {
-  margin-top: 7px;
-  line-height: 1.5;
-}
-
-/* ==============================
-   BAGIAN 7/7 — NAVIGASI & RESPONSIVE
-================================ */
-.bottom-navigation {
-  position: fixed;
+  z-index: 40;
   bottom: 0;
   left: 0;
-  right: 0;
-  z-index: 70;
-  min-height: 88px;
-  padding: 9px max(12px, calc((100% - 750px) / 2));
+  width: 100%;
+  min-height: 82px;
+  padding: 8px 3% max(8px, env(safe-area-inset-bottom));
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background: rgba(255,255,255,.98);
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -5px 20px rgba(0,0,0,.035);
+  background: rgba(255,255,255,.97);
+  border-top: 1px solid #e9eff2;
 }
 
 .nav-item {
   border: 0;
   background: transparent;
-  color: #91a2aa;
+  color: #9aabb2;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  font-size: 14px;
-  font-weight: 600;
 }
 
-.nav-item.active {
+.nav-item span { font-size: 27px; line-height: 1; }
+.nav-item small { font-size: 13px; }
+.nav-item.active { color: var(--blue-dark); font-weight: 800; }
+
+.floating-help {
+  position: fixed;
+  z-index: 35;
+  right: 20px;
+  bottom: 108px;
+  width: 62px;
+  height: 62px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: white;
+  background: #13b981;
+  box-shadow: 0 8px 22px rgba(0,150,100,.25);
+  font-size: 29px;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  padding: 20px;
+  background: rgba(13,35,48,.58);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-card {
+  position: relative;
+  width: min(100%, 430px);
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 25px;
+  border-radius: 25px;
+  background: white;
+  box-shadow: 0 20px 70px rgba(0,0,0,.2);
+}
+
+.modal-card h2 { margin: 0 0 10px; }
+.modal-card p { color: var(--muted); line-height: 1.55; }
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: #eff6f9;
+  font-size: 23px;
+}
+
+.qris-image {
+  display: block;
+  width: min(100%, 290px);
+  max-height: 350px;
+  object-fit: contain;
+  margin: 15px auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.payment-info {
+  padding: 13px;
+  border-radius: 13px;
+  background: #f1f9fc;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.discount-code-display {
+  margin: 20px 0;
+  padding: 18px;
+  border: 2px dashed var(--blue);
+  border-radius: 15px;
   color: var(--blue-dark);
+  background: #effaff;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 2px;
 }
 
-.nav-icon {
-  font-size: 27px;
-  line-height: 1.2;
+.toast-message {
+  position: fixed;
+  z-index: 150;
+  left: 50%;
+  bottom: 105px;
+  transform: translate(-50%, 20px);
+  padding: 12px 18px;
+  border-radius: 30px;
+  color: white;
+  background: #203b49;
+  opacity: 0;
+  pointer-events: none;
+  transition: .2s;
+  text-align: center;
+  width: max-content;
+  max-width: 90%;
 }
 
-@media (min-width: 800px) {
-  .product-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+.toast-message.show { opacity: 1; transform: translate(-50%, 0); }
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 28px;
+  text-align: center;
+  color: var(--muted);
+  background: white;
+  border-radius: 18px;
 }
 
 @media (max-width: 600px) {
-  body {
-    padding-bottom: 88px;
-  }
-
-  .site-header {
-    min-height: 90px;
-    padding: 13px 18px;
-  }
-
-  .site-logo {
-    width: 57px;
-    height: 57px;
-    border-radius: 11px;
-  }
-
-  .header-brand {
-    gap: 12px;
-  }
-
-  .brand-text h1 {
-    font-size: 21px;
-  }
-
-  .brand-text p {
-    font-size: 10px;
-    letter-spacing: 1.4px;
-  }
-
-  .header-help {
-    padding: 12px 14px;
-    font-size: 14px;
-  }
-
-  .page {
-    padding: 22px 18px;
-  }
-
-  .banner-slide img {
-    aspect-ratio: 16 / 6;
-  }
-
-  .welcome-banner {
-    min-height: 105px;
-    padding: 20px;
-  }
-
-  .welcome-banner h2 {
-    font-size: 19px;
-  }
-
-  .welcome-banner p {
-    font-size: 14px;
-  }
-
-  .welcome-banner img {
-    width: 65px;
-    height: 65px;
-  }
-
-  .section-heading h2 {
-    font-size: 23px;
-  }
-
-  .main-category-grid {
-    gap: 10px;
-  }
-
-  .main-category-card {
-    min-height: 125px;
-    border-radius: 20px;
-    font-size: 15px;
-  }
-
-  .category-icon {
-    font-size: 34px;
-  }
-
-  .popular-game-grid,
-  .game-list-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-  }
-
-  .game-card {
-    padding: 10px 7px;
-    border-radius: 19px;
-    font-size: 13px;
-  }
-
-  .game-card img {
-    border-radius: 13px;
-  }
-
-  .page-heading h2 {
-    font-size: 25px;
-  }
-
-  .back-button {
-    flex-basis: 58px;
-    width: 58px;
-    height: 58px;
-  }
-
-  .product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .bottom-navigation {
-    min-height: 83px;
-  }
-
-  .nav-item {
-    font-size: 12px;
-  }
-
-  .floating-help {
-    width: 58px;
-    height: 58px;
-    right: 16px;
-    bottom: 100px;
-  }
-
-  .site-footer {
-    padding-bottom: 110px;
-  }
+  .site-header { min-height: 96px; padding: 13px 4%; }
+  .brand { gap: 11px; }
+  .brand img { width: 62px; height: 62px; border-radius: 15px; }
+  .brand small { font-size: 9px; letter-spacing: 1.4px; }
+  .help-button { padding: 12px 13px; font-size: 14px; }
+  .home-content, .page-content { padding: 22px 4% 40px; }
+  .banner-window { aspect-ratio: 16 / 6.6; border-radius: 23px; }
+  .home-game-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; }
+  .game-card { padding: 10px 8px 12px; border-radius: 20px; }
+  .game-card img { max-width: 100%; border-radius: 15px; }
+  .game-card span { font-size: 13px; }
+  .section-heading { align-items: flex-end; }
+  .section-heading p { font-size: 13px; }
+  .text-link { font-size: 13px; }
+  .account-fields { grid-template-columns: 1fr; }
+  .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bottom-nav { min-height: 78px; }
+  .nav-item span { font-size: 25px; }
+  .nav-item small { font-size: 12px; }
 }
 
-@media (max-width: 360px) {
-  .popular-game-grid,
-  .game-list-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .main-category-card {
-    font-size: 13px;
-  }
-
-  .header-help {
-    padding: 10px;
-    font-size: 12px;
-  }
+@media (min-width: 800px) {
+  .home-game-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .bottom-nav { left: 50%; width: min(100%, 700px); transform: translateX(-50%); border-radius: 20px 20px 0 0; }
 }
