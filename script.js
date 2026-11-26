@@ -1,112 +1,130 @@
 
 /* ==========================================
-   BAGIAN 1/8 — KONFIGURASI TOKO & KATALOG
+   GOTOPUP.ID — SCRIPT.JS
+   BAGIAN 1/5 — KONFIGURASI & KATALOG
 ========================================== */
 
-// Ubah pengaturan diskon di sini.
-const STORE_CONFIG = {
-  name: "GOTOPUP.ID",
-  discountCode: "TAMPAN1",
-  discountType: "fixed",
-  discountValue: 1000,
-  paymentWhatsapp: "628818238236",
-  helpWhatsapp: "6283130951231",
-  sliderInterval: 3000
+/* UBAH KODE DISKON DI SINI */
+const DISCOUNT_CONFIG = {
+  code: "ADMIN TAMPAN1",
+  type: "fixed",       // "fixed" = potongan rupiah, "percent" = persen
+  value: 1000
 };
 
-const rupiah = value =>
-  new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0
-  }).format(Number(value) || 0);
+/* KONFIGURASI TOKO */
+const CONFIG = {
+  paymentWhatsApp: "628818238236",
+  helpWhatsApp: "6283130951231",
+  bannerInterval: 3000
+};
 
-const escapeHTML = value =>
-  String(value ?? "").replace(/[&<>"']/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;",
-    '"': "&quot;", "'": "&#39;"
-  })[char]);
+const money = n => new Intl.NumberFormat("id-ID", {
+  style: "currency", currency: "IDR", maximumFractionDigits: 0
+}).format(Number(n) || 0);
+
+const safe = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+  "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+})[c]);
 
 /*
-  Katalog game dan file gambar.
-  Nama file mengikuti aset yang sudah lu punya.
-  Tambahkan data produk ke products sesuai daftar harga asli.
+  Format item katalog:
+  [id, nama, gambar, kategori, field akun]
+  Kategori: game / game-pc / entertainment
 */
 const CATALOG = [
-  { id:"freefire", name:"Free Fire", image:"freefire.jpg", category:"game", popular:true, fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"freefiremax", name:"Free Fire MAX", image:"freefiremax.jpg", category:"game", popular:true, fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"mobilelegends", name:"Mobile Legends", image:"mobilelegends.jpg", category:"game", popular:true, fields:[["User ID","text","Masukkan User ID"],["Zone ID","text","Masukkan Zone ID"]] },
-  { id:"roblox", name:"Roblox", image:"roblox.jpg", category:"game", popular:true, fields:[["Username","text","Masukkan username"]] },
-  { id:"pubg", name:"PUBG Mobile", image:"pubg.jpg", category:"game", popular:true, fields:[["Character ID","text","Masukkan Character ID"]] },
-  { id:"valorant", name:"Valorant", image:"valorant.jpg", category:"game-pc", popular:true, fields:[["Riot ID","text","Nama#Tag"]] },
-  { id:"magicchess", name:"Magic Chess GoGo", image:"magicchesgogo.jpg", category:"game", popular:true, fields:[["User ID","text","Masukkan User ID"],["Zone ID","text","Masukkan Zone ID"]] },
-  { id:"vidio", name:"Vidio", image:"weetv.jpg", category:"entertainment", fields:[["Email","email","Email akun"]] },
-  { id:"honorofkings", name:"Honor of Kings", image:"honorofkings.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"bloodstrike", name:"Blood Strike", image:"bloodstrike.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"footballmaster2", name:"Football Master 2", image:"footballmaster2.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"footballdreams", name:"Football Dreams: Be A Pro", image:"footballdreamsbeapro.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"ragnarokclassic", name:"Ragnarok M Classic", image:"ragnarokmclasic.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"zepeto", name:"Zepeto", image:"zepeto.jpg", category:"game", fields:[["ZEPETO ID","text","Masukkan ZEPETO ID"]] },
-  { id:"kingofavalon", name:"King of Avalon", image:"kingofavalon.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"undawn", name:"Undawn", image:"undawn.jpg", category:"game", fields:[["Character ID","text","Masukkan Character ID"]] },
-  { id:"metalslug", name:"Metal Slug Awakening", image:"metalslugawakening.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"captaintsubasa", name:"Captain Tsubasa Ace", image:"captaintsubasaace.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"betheking", name:"Be The King", image:"bethekingjudgedestiny.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"topeleven", name:"Top Eleven", image:"topeleven.jpg", category:"game", fields:[["Manager ID","text","Masukkan Manager ID"]] },
-  { id:"deltaforce", name:"Delta Force", image:"deltaforce.jpg", category:"game-pc", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"cloudsong", name:"Cloud Song Saga of Skywalkers", image:"cloudsongsagaofskywalkers.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"harrypotter", name:"Harry Potter Magic Awakened", image:"harrypottermagicawakened.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"aov", name:"Arena of Valor", image:"arenaofvalor.jpg", category:"game", fields:[["Character ID","text","Masukkan Character ID"]] },
-  { id:"afkjourney", name:"AFK Journey", image:"afkjourney.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"racingmaster", name:"Racing Master", image:"racingmaster.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"onmyoji", name:"Onmyoji Arena", image:"onmyojiarena.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"muorigin2", name:"MU Origin 2", image:"muorigin2.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"mobrush", name:"MOB RUSH", image:"mobrush.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"muorigin3", name:"MU Origin 3 SEA", image:"muorigin3.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"identityv", name:"Identity V", image:"identityv.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"legacyfate", name:"Legacy Fate Sacred and Fearless", image:"legacyfatesacredandfearless.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"rainbowsix", name:"Rainbow Six Mobile", image:"rainbowsixmobile.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"codm", name:"Call of Duty Mobile ID", image:"callofduty.jpg", category:"game", fields:[["Open ID","text","Masukkan Open ID"]] },
-  { id:"snowbreak", name:"Snowbreak Containment Zone", image:"snowbreakcontaimentzone.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"honkaiimpact", name:"Honkai Impact 3", image:"honkaiimpact3.jpg", category:"game", fields:[["Captain ID","text","Masukkan Captain ID"]] },
-  { id:"pathtonowhere", name:"Path to Nowhere", image:"pathtonowhere.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"heavenburnsred", name:"Heaven Burns Red", image:"heavenburnsred.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"arenabreakout", name:"Arena Breakout", image:"arenabreakout.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"lor", name:"Legends of Runeterra", image:"legendsofruneterra.jpg", category:"game-pc", fields:[["Riot ID","text","Nama#Tag"]] },
-  { id:"lifeafter", name:"LifeAfter", image:"lifeafter.jpg", category:"game", fields:[["Character ID","text","Masukkan Character ID"]] },
-  { id:"loveanddeepspace", name:"Love and Deepspace", image:"loveanddeepspace.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"watcherofrealms", name:"Watcher of Realms", image:"watcherofrealms.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"hsr", name:"Honkai Star Rail", image:"honkaistarrail.jpg", category:"game", fields:[["UID","text","Masukkan UID"],["Server","text","Masukkan server"]] },
-  { id:"zzz", name:"Zenless Zone Zero", image:"zenlesszonezero.jpg", category:"game", fields:[["UID","text","Masukkan UID"],["Server","text","Masukkan server"]] },
-  { id:"speeddrifters", name:"Speed Drifters", image:"speeddrifters.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"tamashi", name:"Tamashi Rise of Yokai", image:"tamashiriseofyokai.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"marvelduel", name:"Marvel Duel", image:"marvelduel.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"ghoststory", name:"Ghost Story Love Destiny", image:"ghoststorylovedestiny.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"ragnarokorigin", name:"Ragnarok Origin", image:"ragnarokorigin.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"stateofsurvival", name:"State of Survival", image:"stateofsurvival.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"tft", name:"Teamfight Tactics Mobile", image:"teamfighttacticsmobile.jpg", category:"game", fields:[["Riot ID","text","Nama#Tag"]] },
-  { id:"genshin", name:"Genshin Impact", image:"genshinimpact.jpg", category:"game", fields:[["UID","text","Masukkan UID"],["Server","text","Pilih server"]] },
-  { id:"lotr", name:"Lord of the Rings Rise to War", image:"thelordoftheringsrisetowar.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"ragnarokx", name:"Ragnarok X Next Generation", image:"ragnarokxnextgeneration.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"onepunch", name:"One Punch Man The Strongest", image:"onepunchmanthestrongest.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"wildrift", name:"League of Legends Wild Rift", image:"leagueoflegends.jpg", category:"game", fields:[["Riot ID","text","Nama#Tag"]] },
-  { id:"growtopia", name:"Growtopia", image:"growtopia.jpg", category:"game", fields:[["GrowID","text","Masukkan GrowID"]] },
-  { id:"tomjerry", name:"Tom and Jerry Chase", image:"tomandjerrychase.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"hago", name:"Hago", image:"hago.jpg", category:"game", fields:[["Hago ID","text","Masukkan Hago ID"]] },
-  { id:"pgr", name:"Punishing Gray Raven", image:"punishinggreyraven.jpg", category:"game", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"pixelgun", name:"Pixel Gun 3D", image:"pixelgun3d.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"astraknight", name:"Astra Knights of Veda", image:"astraknightsofveda.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"mushroom", name:"Legend of Mushroom Rush", image:"leagueofmushroomrush.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"heroickim", name:"Heroic Uncle Kim", image:"heroicunclekim.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"totalfootball", name:"Total Football", image:"totalfootball.jpg", category:"game", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"pointblank", name:"Point Blank", image:"pointblank.jpg", category:"game-pc", fields:[["User ID","text","Masukkan User ID"]] },
-  { id:"lolpc", name:"League of Legends PC", image:"leagueoflegends.jpg", category:"game-pc", fields:[["Riot ID","text","Nama#Tag"]] },
-  { id:"marvelrivals", name:"Marvel Rivals", image:"marvelrivals.jpg", category:"game-pc", fields:[["Player ID","text","Masukkan Player ID"]] },
-  { id:"weTV", name:"WeTV", image:"weetv.jpg", category:"entertainment", fields:[["Email","email","Email akun"]] }
+  ["freefire","Free Fire","freefire.jpg","game",["Player ID"]],
+  ["freefiremax","Free Fire MAX","freefiremax.jpg","game",["Player ID"]],
+  ["mobilelegends","Mobile Legends","mobilelegends.jpg","game",["User ID","Zone ID"]],
+  ["roblox","Roblox","roblox.jpg","game",["Username"]],
+  ["pubg","PUBG Mobile","pubg.jpg","game",["Character ID"]],
+  ["magicchess","Magic Chess GoGo","magicchesgogo.jpg","game",["User ID","Zone ID"]],
+  ["honorofkings","Honor of Kings","honorofkings.jpg","game",["Player ID"]],
+  ["bloodstrike","Blood Strike","bloodstrike.jpg","game",["Player ID"]],
+  ["footballmaster2","Football Master 2","footballmaster2.jpg","game",["Player ID"]],
+  ["footballdreams","Football Dreams: Be A Pro","footballdreamsbeapro.jpg","game",["Player ID"]],
+  ["ragnarokclassic","Ragnarok M Classic","ragnarokmclasic.jpg","game",["User ID"]],
+  ["zepeto","Zepeto","zepeto.jpg","game",["ZEPETO ID"]],
+  ["kingofavalon","King of Avalon","kingofavalon.jpg","game",["Player ID"]],
+  ["undawn","Undawn","undawn.jpg","game",["Character ID"]],
+  ["metalslug","Metal Slug Awakening","metalslugawakening.jpg","game",["Player ID"]],
+  ["captaintsubasa","Captain Tsubasa Ace","captaintsubasaace.jpg","game",["Player ID"]],
+  ["betheking","Be The King","bethekingjudgedestiny.jpg","game",["User ID"]],
+  ["topeleven","Top Eleven","topeleven.jpg","game",["Manager ID"]],
+  ["cloudsong","Cloud Song Saga of Skywalkers","cloudsongsagaofskywalkers.jpg","game",["User ID"]],
+  ["harrypotter","Harry Potter Magic Awakened","harrypottermagicawakened.jpg","game",["Player ID"]],
+  ["aov","Arena of Valor","arenaofvalor.jpg","game",["Player ID"]],
+  ["afkjourney","AFK Journey","afkjourney.jpg","game",["Player ID"]],
+  ["racingmaster","Racing Master","racingmaster.jpg","game",["Player ID"]],
+  ["onmyoji","Onmyoji Arena","onmyojiarena.jpg","game",["Player ID"]],
+  ["muorigin2","MU Origin 2","muorigin2.jpg","game",["User ID"]],
+  ["mobrush","MOB RUSH","mobrush.jpg","game",["Player ID"]],
+  ["muorigin3","MU Origin 3 SEA","muorigin3.jpg","game",["User ID"]],
+  ["identityv","Identity V","identityv.jpg","game",["Player ID"]],
+  ["legacyfate","Legacy Fate Sacred and Fearless","legacyfatesacredandfearless.jpg","game",["Player ID"]],
+  ["rainbowsix","Rainbow Six Mobile","rainbowsixmobile.jpg","game",["Player ID"]],
+  ["codm","Call of Duty Mobile ID","callofduty.jpg","game",["Open ID"]],
+  ["snowbreak","Snowbreak Containment Zone","snowbreakcontaimentzone.jpg","game",["Player ID"]],
+  ["honkaiimpact","Honkai Impact 3","honkaiimpact3.jpg","game",["Captain ID"]],
+  ["pathtonowhere","Path to Nowhere","pathtonowhere.jpg","game",["Player ID"]],
+  ["heavenburnsred","Heaven Burns Red","heavenburnsred.jpg","game",["Player ID"]],
+  ["arenabreakout","Arena Breakout","arenabreakout.jpg","game",["Player ID"]],
+  ["lifeafter","LifeAfter","lifeafter.jpg","game",["Character ID"]],
+  ["loveanddeepspace","Love and Deepspace","loveanddeepspace.jpg","game",["Player ID"]],
+  ["watcherofrealms","Watcher of Realms","watcherofrealms.jpg","game",["Player ID"]],
+  ["hsr","Honkai Star Rail","honkaistarrail.jpg","game",["UID","Server"]],
+  ["zzz","Zenless Zone Zero","zenlesszonezero.jpg","game",["UID","Server"]],
+  ["speeddrifters","Speed Drifters","speeddrifters.jpg","game",["Player ID"]],
+  ["tamashi","Tamashi Rise of Yokai","tamashiriseofyokai.jpg","game",["Player ID"]],
+  ["marvelduel","Marvel Duel","marvelduel.jpg","game",["Player ID"]],
+  ["ghoststory","Ghost Story Love Destiny","ghoststorylovedestiny.jpg","game",["Player ID"]],
+  ["ragnarokorigin","Ragnarok Origin","ragnarokorigin.jpg","game",["User ID"]],
+  ["stateofsurvival","State of Survival","stateofsurvival.jpg","game",["Player ID"]],
+  ["tft","Teamfight Tactics Mobile","teamfighttacticsmobile.jpg","game",["Riot ID"]],
+  ["genshin","Genshin Impact","genshinimpact.jpg","game",["UID","Server"]],
+  ["lotr","Lord of the Rings Rise to War","thelordoftheringsrisetowar.jpg","game",["Player ID"]],
+  ["ragnarokx","Ragnarok X Next Generation","ragnarokxnextgeneration.jpg","game",["User ID"]],
+  ["onepunch","One Punch Man The Strongest","onepunchmanthestrongest.jpg","game",["User ID"]],
+  ["wildrift","League of Legends Wild Rift","leagueoflegends.jpg","game",["Riot ID"]],
+  ["growtopia","Growtopia","growtopia.jpg","game",["GrowID"]],
+  ["tomjerry","Tom and Jerry Chase","tomandjerrychase.jpg","game",["Player ID"]],
+  ["hago","Hago","hago.jpg","game",["Hago ID"]],
+  ["pgr","Punishing Gray Raven","punishinggreyraven.jpg","game",["User ID"]],
+  ["pixelgun","Pixel Gun 3D","pixelgun3d.jpg","game",["Player ID"]],
+  ["astraknight","Astra Knights of Veda","astraknightsofveda.jpg","game",["Player ID"]],
+  ["mushroom","Legend of Mushroom Rush","leagueofmushroomrush.jpg","game",["Player ID"]],
+  ["heroickim","Heroic Uncle Kim","heroicunclekim.jpg","game",["Player ID"]],
+  ["totalfootball","Total Football","totalfootball.jpg","game",["Player ID"]],
+
+  ["valorant","Valorant","valorant.jpg","game-pc",["Riot ID"]],
+  ["deltaforce","Delta Force","deltaforce.jpg","game-pc",["Player ID"]],
+  ["pointblank","Point Blank","pointblank.jpg","game-pc",["User ID"]],
+  ["lor","Legends of Runeterra","legendsofruneterra.jpg","game-pc",["Riot ID"]],
+  ["lolpc","League of Legends PC","leagueoflegends.jpg","game-pc",["Riot ID"]],
+  ["marvelrivals","Marvel Rivals","marvelrivals.jpg","game-pc",["Player ID"]],
+
+  ["poppo","Poppo Live","logo.jpg","entertainment",["User ID"]],
+  ["bigo","Bigo Live","bigolive.jpg","entertainment",["User ID"]],
+  ["chamet","Chamet","chamet.jpg","entertainment",["User ID"]],
+  ["wesing","WeSing","wesing.jpg","entertainment",["User ID"]],
+  ["sugo","Sugo Voice Live Chat Party","sugo.jpg","entertainment",["User ID"]],
+  ["lita","Lita","lita.jpg","entertainment",["User ID"]],
+  ["livu","Livu","livu.jpg","entertainment",["User ID"]],
+  ["likee","Likee","likee.jpg","entertainment",["Likee ID"]],
+  ["starmaker","StarMaker","starmaker.jpg","entertainment",["User ID"]],
+  ["wetv","WeTV","weetv.jpg","entertainment",["Email"]],
+  ["vidio","Vidio","weetv.jpg","entertainment",["Email"]]
 ];
 
-// Data produk awal. Isi lengkap wajib disambungkan dari daftar harga asli.
-const PRODUCT_DATA = {
+/* ==========================================
+   BAGIAN 2/5 — DATA PRODUK
+========================================== */
+
+/*
+  Tiap game punya subkategori sendiri.
+  Format produk: ["Nama produk", harga angka]
+  Harga dalam rupiah, tanpa titik.
+*/
+const PRODUCTS = {
   freefire: {
     "Diamond": [
       ["5 Diamonds",984],["10 Diamonds",1862],["12 Diamonds",1970],
@@ -133,6 +151,34 @@ const PRODUCT_DATA = {
       ["Level Up Pass L25",9262],["Level Up Pass L30",15159]
     ]
   },
+
+  freefiremax: {
+    "Diamond": [
+      ["5 Diamonds",984],["10 Diamonds",1862],["12 Diamonds",1970],
+      ["20 Diamonds",3618],["25 Diamonds",4997],["30 Diamonds",5661],
+      ["50 Diamonds",7650],["55 Diamonds",7960],["70 Diamonds",9250],
+      ["80 Diamonds",12254],["100 Diamonds",14480],["120 Diamonds",18132],
+      ["130 Diamonds",19291],["140 Diamonds",18850],["145 Diamonds",21067],
+      ["150 Diamonds",22049],["190 Diamonds",27926],["200 Diamonds",29885],
+      ["210 Diamonds",30326],["280 Diamonds",39679],["355 Diamonds",47350],
+      ["420 Diamonds",58866],["425 Diamonds",59771],["475 Diamonds",67607],
+      ["495 Diamonds",69565],["500 Diamonds",70543],["510 Diamonds",72503],
+      ["545 Diamonds",77401],["565 Diamonds",79360],["600 Diamonds",86218],
+      ["635 Diamonds",89154],["720 Diamonds",96000],["800 Diamonds",109106],
+      ["860 Diamonds",118540],["930 Diamonds",128335],["1000 Diamonds",129800],
+      ["1050 Diamonds",146950],["1075 Diamonds",156000],["1080 Diamonds",152909],
+      ["1440 Diamonds",204000],["1450 Diamonds",205000],["2160 Diamonds",303000],
+      ["2180 Diamonds",305000],["7290 Diamonds",925000],["36500 Diamonds",5005000],
+      ["73100 Diamonds",10010000]
+    ],
+    "Membership": [
+      ["Weekly",28200],["Monthly",91715],["BP Card",46108],
+      ["Level Up Pass L6",5598],["Level Up Pass L10",9262],
+      ["Level Up Pass L15",9262],["Level Up Pass L20",9262],
+      ["Level Up Pass L25",9262],["Level Up Pass L30",15159]
+    ]
+  },
+
   mobilelegends: {
     "Diamond": [
       ["5 Diamonds",1675],["10 Diamonds",3479],["12 Diamonds",3859],
@@ -160,7 +206,7 @@ const PRODUCT_DATA = {
       ["20100 Diamonds",6161530],["21330 Diamonds",6397793],["23340 Diamonds",7012948],
       ["24150 Diamonds",7225380],["26160 Diamonds",7840953],["28170 Diamonds",8456106]
     ],
-    "Weekly Diamond Pass & Bundle": [
+    "Weekly Pass & Bundle": [
       ["Weekly Diamond Pass",30490],["WDP x2",62990],["WDP x3",93990],
       ["Weekly Elite Bundle",17317],["Monthly Epic Bundle",84884]
     ],
@@ -168,10 +214,19 @@ const PRODUCT_DATA = {
       ["100 (50+50)",17317],["300 (150+150)",50751],
       ["500 (250+250)",84884],["1000 (500+500)",169759]
     ],
+    "Top Up Global": [
+      ["WDP",36551],["WDP Global",40141],["Twilight Pass",175318],
+      ["Twilight Pass Global",203960],["11 Diamonds",3520],
+      ["22 Diamonds",6939],["70 Diamonds",23616],["223 Diamonds",69401],
+      ["336 Diamonds",103600],["570 Diamonds",176002],["1163 Diamonds",347000],
+      ["2398 Diamonds",694004],["6042 Diamonds",1715008],["140 Diamonds",46685],
+      ["Weekly Elite Bundle",17317],["Monthly Epic Bundle",84884]
+    ],
     "Starlight": [
       ["Basic Gift 7 Days",40000],["Premium Gift 7 Days",96000]
     ]
   },
+
   roblox: {
     "Robux": [
       ["50 Robux",6500],["100 Robux",12600],["200 Robux",25200],
@@ -182,20 +237,7 @@ const PRODUCT_DATA = {
       ["4000 Robux",497000],["5000 Robux",625000]
     ]
   },
-  vidio: {
-    "Vidio Ultimate": [
-      ["Ultimate All Screen 1 Tahun",1379500],
-      ["Ultimate Mobile 30 Hari",105500],
-      ["Ultimate Mobile 1 Tahun",765500],
-      ["Ultimate All Screen 30 Hari",200500],
-      ["Ultimate Mobile 3 Bulan",263658]
-    ],
-    "Vidio Platinum": [
-      ["Platinum 30 Hari",54500],["Platinum Extra 30 Hari",76500],
-      ["Platinum 3 Bulan",118500],["Platinum Extra 3 Bulan",187500],
-      ["Platinum 1 Tahun",398500],["Platinum Extra 1 Tahun",553500]
-    ]
-  },
+
   valorant: {
     "Valorant Points": [
       ["475 VP",53219],["1000 VP",105939],["1475 VP",158659],
@@ -209,27 +251,241 @@ const PRODUCT_DATA = {
       ["18300 VP",1767544],["20000 VP",1927586],["22000 VP",2069740]
     ]
   },
+
+  vidio: {
+    "Vidio Ultimate": [
+      ["Ultimate All Screen 1 Tahun",1379500],["Ultimate Mobile 30 Hari",105500],
+      ["Ultimate Mobile 1 Tahun",765500],["Ultimate All Screen 30 Hari",200500],
+      ["Ultimate Mobile 3 Bulan",263658]
+    ],
+    "Vidio Platinum": [
+      ["Platinum 30 Hari",54500],["Platinum Extra 30 Hari",76500],
+      ["Platinum 3 Bulan",118500],["Platinum Extra 3 Bulan",187500],
+      ["Platinum 1 Tahun",398500],["Platinum Extra 1 Tahun",553500]
+    ]
+  },
+
   weetv: {
     "WeTV VIP": [["12 Months VIP",476200]]
+  },
+
+  poppo: {
+    "Coins": [
+      ["1.000 Coins",2684],["7.000 Coins",15190],["21.000 Coins",44570],
+      ["25.500 Coins",54099],["43.500 Coins",92412],["43.750 Coins",93008],
+      ["70.000 Coins",147401],["83.000 Coins",175391],["88.000 Coins",186310],
+      ["88.990 Coins",188493],["178.000 Coins",376487],["180.000 Coins",381053],
+      ["210.000 Coins",441203],["270.000 Coins",571230],["273.000 Coins",577185],
+      ["252.000 Coins",732225],["350.000 Coins",735004],["430.000 Coins",911285],
+      ["450.000 Coins",950988],["455.000 Coins",962701],["700.000 Coins",1469509],
+      ["1.050.000 Coins",2204013],["1.400.000 Coins",2938517],
+      ["1.750.000 Coins",3673022],["2.100.000 Coins",4407526],
+      ["2.450.000 Coins",5142030],["2.800.000 Coins",5876535],
+      ["3.150.000 Coins",6611039],["3.500.000 Coins",7345544],
+      ["4.200.000 Coins",8814552],["4.900.000 Coins",10283561],
+      ["5.600.000 Coins",11752570],["6.300.000 Coins",13221578],
+      ["7.000.000 Coins",14690587],["8.750.000 Coins",18363109],
+      ["10.500.000 Coins",22035631],["12.250.000 Coins",25708152],
+      ["14.000.000 Coins",29380674],["15.750.000 Coins",33053196],
+      ["17.500.000 Coins",36725718],["19.250.000 Coins",40398239],
+      ["21.000.000 Coins",44070761],["24.500.000 Coins",51415805],
+      ["28.000.000 Coins",58760848],["31.500.000 Coins",66105892],
+      ["35.000.000 Coins",73450935]
+    ]
+  },
+
+  bigo: {
+    "Diamonds": [
+      ["25 Diamonds",9495],["50 Diamonds",18489],["100 Diamonds",36478],
+      ["150 Diamonds",54672],["200 Diamonds",72661],["250 Diamonds",90650],
+      ["300 Diamonds",108639],["500 Diamonds",180799],["750 Diamonds",270949],
+      ["1000 Diamonds",361098],["2000 Diamonds",721492],["3000 Diamonds",1082091],
+      ["4000 Diamonds",1442485],["5000 Diamonds",1803083],
+      ["7500 Diamonds",2704375],["10000 Diamonds",3605666],
+      ["20000 Diamonds",7210832],["30000 Diamonds",10815999],
+      ["50000 Diamonds",18026331]
+    ]
+  },
+
+  chamet: {
+    "Diamonds": [
+      ["18.750 Diamonds",60488],["62.500 Diamonds",200804],
+      ["187.500 Diamonds",600385],["625.000 Diamonds",2003540],
+      ["1.875.000 Diamonds",5999348],["3.750.000 Diamonds",11987924],
+      ["6.250.000 Diamonds",20030900]
+    ]
+  },
+
+  wesing: {
+    "Kcoins": [
+      ["37 Kcoins",10400],["112 Kcoins",30100],["373 Kcoins",99100],
+      ["933 Kcoins",247000],["1866 Kcoins",493400],
+      ["3731 Kcoins",986300],["5597 Kcoins",1479000]
+    ]
+  },
+
+  sugo: {
+    "Coins": [
+      ["1.200 Coins",20738],["2.400 Coins",41180],["6.250 Coins",102506],
+      ["12.500 Coins",204716],["37.500 Coins",613558],
+      ["65.000 Coins",1022400],["130.000 Coins",2044504]
+    ]
+  },
+
+  lita: {
+    "Coins": [
+      ["300 Coins",39688],["600 Coins",78877],["1.000 Coins",130195],
+      ["2.000 Coins",259889],["5.000 Coins",648973],["10.000 Coins",1296514]
+    ]
+  },
+
+  livu: {
+    "Coins": [
+      ["299 Coins",54716],["650 Coins",90896],["990 Coins",145004],
+      ["2500 Coins",325148],["5000 Coins",627332],["10000 Coins",1166360],
+      ["20000 Coins",2268716],["50000 Coins",5388188]
+    ]
+  },
+
+  likee: {
+    "Diamonds": [
+      ["100 Diamonds",36277],["200 Diamonds",72053],["500 Diamonds",178991],
+      ["1000 Diamonds",357481],["1500 Diamonds",535972],["2000 Diamonds",714461],
+      ["2500 Diamonds",892952],["3000 Diamonds",1071442],["3500 Diamonds",1249933],
+      ["4000 Diamonds",1428423],["4500 Diamonds",1606914],["5000 Diamonds",1785206],
+      ["10000 Diamonds",3569914],["20000 Diamonds",7139328]
+    ]
+  },
+
+  starmaker: {
+    "Global Coins + Bonus": [
+      ["60+5 Coins",13500],["420+40 Coins",91700],["300+25 Coins",65600],
+      ["600+60 Coins",130800],["1000+110 Coins",219500],
+      ["1200+150 Coins",266500],["1600+200 Coins",355200],
+      ["2100+300 Coins",472600],["2700+400 Coins",608200],
+      ["3000+450 Coins",677400],["3400+550 Coins",775200],
+      ["5000+850 Coins",1147000],["6000+1100 Coins",1387000],
+      ["6500+1200 Coins",1503100],["7000+1300 Coins",1616600],
+      ["10000+1900 Coins",2315700],["14000+2800 Coins",3261500]
+    ]
   }
 };
-      
+
 /* ==========================================
-   BAGIAN 2/8 — STATE & NAVIGASI HALAMAN
+   BAGIAN 3/5 — RENDER BERANDA & DAFTAR
 ========================================== */
 
 let currentPage = "homePage";
-let selectedCategory = "game";
-let selectedGame = null;
-let selectedSubcategory = "all";
-let selectedProduct = null;
-let discountApplied = false;
-let discountAmount = 0;
+let currentCategory = "game";
+let currentGame = null;
+let currentProduct = null;
+let currentSubcategory = "all";
+let currentFilter = "all";
+let discountIsActive = false;
 let currentOrder = null;
-let currentBanner = 0;
-let bannerTimer = null;
+let bannerIndex = 0;
+let bannerInterval = null;
 
-const $ = id => document.getElementById(id);
+const byId = id => document.getElementById(id);
+
+function findGame(id) {
+  return CATALOG.find(item => item[0] === id);
+}
+
+function gameCard(item) {
+  const [id, name, image] = item;
+  return `
+    <button class="game-card" type="button" data-game-id="${safe(id)}">
+      <img src="${safe(image)}" alt="${safe(name)}"
+        loading="lazy" onerror="this.onerror=null;this.src='logo.jpg'">
+      <span>${safe(name)}</span>
+    </button>`;
+}
+
+function renderHome() {
+  const gameGrid = byId("homeGameGrid");
+  const pcGrid = byId("homePcGrid");
+  const entertainmentGrid = byId("homeEntertainmentGrid");
+
+  if (gameGrid) {
+    gameGrid.innerHTML = CATALOG
+      .filter(item => item[3] === "game")
+      .map(gameCard).join("");
+  }
+
+  if (pcGrid) {
+    pcGrid.innerHTML = CATALOG
+      .filter(item => item[3] === "game-pc")
+      .map(gameCard).join("");
+  }
+
+  if (entertainmentGrid) {
+    entertainmentGrid.innerHTML = CATALOG
+      .filter(item => item[3] === "entertainment")
+      .map(gameCard).join("");
+  }
+}
+
+function categoryTitle(category) {
+  return {
+    "game": ["Game", "Pilih game favorit kamu"],
+    "game-pc": ["Game PC", "Pilih game PC yang ingin kamu top up"],
+    "entertainment": ["Entertainment", "Pilih layanan hiburan dan digital"]
+  }[category] || ["Game", "Pilih produk"];
+}
+
+function openCategory(category) {
+  currentCategory = category;
+  currentFilter = "all";
+
+  const [title, description] = categoryTitle(category);
+  byId("gamePageTitle").textContent = title;
+  byId("gamePageDescription").textContent = description;
+  byId("gameSearch").value = "";
+
+  document.querySelectorAll("[data-filter]").forEach(button => {
+    button.classList.toggle(button.dataset.filter === "all" ? "active" : "", button.dataset.filter === "all");
+  });
+
+  renderListing();
+  showPage("gamePage");
+}
+
+function renderListing() {
+  const search = (byId("gameSearch")?.value || "").trim().toLowerCase();
+
+  const items = CATALOG.filter(item => {
+    const matchesCategory = item[3] === currentCategory;
+    const matchesSearch = item[1].toLowerCase().includes(search);
+    const matchesFilter = currentFilter === "all" ||
+      (currentFilter === "popular" && [
+        "freefire","freefiremax","mobilelegends","roblox",
+        "pubg","valorant","magicchess"
+      ].includes(item[0]));
+    return matchesCategory && matchesSearch && matchesFilter;
+  });
+
+  byId("gameListGrid").innerHTML = items.length
+    ? items.map(gameCard).join("")
+    : `<div class="empty-state"><h3>Belum ditemukan</h3>
+       <p>Coba kata pencarian lain.</p></div>`;
+}
+
+byId("gameSearch").addEventListener("input", renderListing);
+
+document.querySelectorAll("[data-filter]").forEach(button => {
+  button.addEventListener("click", () => {
+    currentFilter = button.dataset.filter;
+    document.querySelectorAll("[data-filter]").forEach(item =>
+      item.classList.toggle("active", item === button)
+    );
+    renderListing();
+  });
+});
+
+/* ==========================================
+   NAVIGASI ANTAR HALAMAN
+========================================== */
 
 function showPage(pageId) {
   document.querySelectorAll(".page").forEach(page => {
@@ -239,217 +495,146 @@ function showPage(pageId) {
   currentPage = pageId;
 
   document.querySelectorAll(".nav-item").forEach(button => {
-    const target = button.dataset.page;
-    button.classList.toggle(
-      "active",
-      target === pageId ||
-      (pageId === "gameDetailPage" && target === "gamePage") ||
-      (pageId === "checkoutPage" && target === "gamePage")
-    );
+    const page = button.dataset.page;
+    const active = page === pageId ||
+      (page === "gamePage" && pageId === "gameDetailPage") ||
+      (page === "gamePage" && pageId === "checkoutPage");
+    button.classList.toggle("active", active);
   });
 
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function openCategory(category) {
-  selectedCategory = category;
-  selectedGame = null;
-
-  const titles = {
-    game: ["Pilih Game", "Temukan game yang ingin kamu top up"],
-    "game-pc": ["Pilih Game PC", "Temukan produk game PC"],
-    entertainment: ["Entertainment", "Pilih layanan entertainment"]
-  };
-
-  const heading = titles[category] || titles.game;
-  $("gamePageTitle").textContent = heading[0];
-  $("gamePageDescription").textContent = heading[1];
-
-  if ($("gameSearch")) $("gameSearch").value = "";
-
-  renderGameList();
-  showPage("gamePage");
-}
-
-function openGame(gameId) {
-  const game = CATALOG.find(item => item.id === gameId);
-  if (!game) return;
-
-  selectedGame = game;
-  selectedProduct = null;
-  selectedSubcategory = "all";
-  discountApplied = false;
-  discountAmount = 0;
-
-  $("detailGameTitle").textContent = game.name;
-  $("detailGameName").textContent = game.name;
-  $("detailGameDescription").textContent =
-    "Pilih subkategori dan produk yang ingin kamu beli";
-  $("detailGameImage").src = game.image;
-  $("detailGameImage").alt = game.name;
-
-  renderSubcategories();
-  renderProducts();
-  renderAccountFields();
-  updateSummary();
-  showPage("gameDetailPage");
-}
-
-function goBackHome() {
-  showPage("homePage");
-}
-
-function goBackGames() {
-  openCategory(selectedCategory);
-}
-
-function goBackDetail() {
-  if (selectedGame) openGame(selectedGame.id);
-}
-
 document.addEventListener("click", event => {
-  const categoryButton = event.target.closest("[data-category]");
+  const categoryButton = event.target.closest("[data-open-category]");
   if (categoryButton) {
-    openCategory(categoryButton.dataset.category);
+    openCategory(categoryButton.dataset.openCategory);
     return;
   }
 
-  const openCategoryButton = event.target.closest("[data-open-category]");
-  if (openCategoryButton) {
-    openCategory(openCategoryButton.dataset.openCategory);
+  const gameButton = event.target.closest("[data-game-id]");
+  if (gameButton) {
+    openGame(gameButton.dataset.gameId);
     return;
   }
 
-  const navButton = event.target.closest("[data-page]");
+  const navButton = event.target.closest(".nav-item");
   if (navButton) {
     const page = navButton.dataset.page;
-
-    if (page === "gamePage") {
-      openCategory("game");
-    } else {
+    if (page === "gamePage") openCategory("game");
+    else {
       showPage(page);
+      if (page === "ordersPage") renderOrders();
     }
     return;
   }
 
   if (event.target.closest("[data-back-home]")) {
-    goBackHome();
-    return;
+    showPage("homePage");
   }
 
   if (event.target.closest("[data-back-games]")) {
-    goBackGames();
-    return;
+    openCategory(currentCategory);
   }
 
   if (event.target.closest("[data-back-detail]")) {
-    goBackDetail();
-    return;
+    if (currentGame) openGame(currentGame[0]);
   }
 
   if (event.target.closest("[data-open-orders]")) {
+    renderOrders();
     showPage("ordersPage");
-    renderOrderHistory();
-    return;
   }
 
   if (event.target.closest("[data-open-games]")) {
     openCategory("game");
-    return;
-  }
-
-  const closeButton = event.target.closest("[data-close-modal]");
-  if (closeButton) {
-    closeModal(closeButton.dataset.closeModal);
   }
 });
-
+       
 /* ==========================================
-   BAGIAN 3/8 — RENDER GAME & PENCARIAN
+   BAGIAN 4/5 — DETAIL GAME & PRODUK
 ========================================== */
 
-function renderGameCard(game) {
-  return `
-    <button class="game-card" type="button"
-      data-game-id="${escapeHTML(game.id)}">
-      <img src="${escapeHTML(game.image)}"
-        alt="${escapeHTML(game.name)}"
-        loading="lazy"
-        onerror="this.src='logo.jpg'">
-      <span>${escapeHTML(game.name)}</span>
-    </button>
-  `;
+function openGame(id) {
+  const item = findGame(id);
+  if (!item) return;
+
+  currentGame = item;
+  currentProduct = null;
+  currentSubcategory = "all";
+  discountIsActive = false;
+
+  byId("detailGameTitle").textContent = item[1];
+  byId("detailGameName").textContent = item[1];
+  byId("detailGameImage").src = item[2];
+  byId("detailGameImage").alt = item[1];
+  byId("detailGameDescription").textContent =
+    "Pilih subkategori dan produk yang ingin kamu beli";
+
+  renderAccountFields();
+  renderSubcategories();
+  renderProducts();
+  updateSummary();
+  showPage("gameDetailPage");
 }
 
-function renderGameList() {
-  const grid = $("gameListGrid");
-  if (!grid) return;
-
-  const search = ($("gameSearch")?.value || "").trim().toLowerCase();
-
-  const games = CATALOG.filter(game => {
-    return game.category === selectedCategory &&
-      game.name.toLowerCase().includes(search);
-  });
-
-  grid.innerHTML = games.length
-    ? games.map(renderGameCard).join("")
-    : `<div class="empty-state"><h3>Game tidak ditemukan</h3>
-       <p>Coba kata pencarian lain.</p></div>`;
+function getProductGroups() {
+  if (!currentGame) return {};
+  return PRODUCTS[currentGame[0]] || {};
 }
 
-function renderPopularGames() {
-  const grid = $("popularGameGrid");
-  if (!grid) return;
-
-  const popular = CATALOG.filter(game => game.popular);
-  grid.innerHTML = popular.map(renderGameCard).join("");
+function renderAccountFields() {
+  const fields = currentGame?.[4] || [];
+  byId("gameAccountFields").innerHTML = fields.map((name, index) => `
+    <label>
+      ${safe(name)}
+      <input id="account-${index}" type="text"
+        placeholder="Masukkan ${safe(name)}" autocomplete="off" required>
+    </label>
+  `).join("");
 }
 
-document.addEventListener("click", event => {
-  const gameCard = event.target.closest("[data-game-id]");
-  if (gameCard) openGame(gameCard.dataset.gameId);
-});
+function readAccountFields() {
+  const fields = currentGame?.[4] || [];
+  const values = [];
 
-$("gameSearch")?.addEventListener("input", renderGameList);
+  for (let index = 0; index < fields.length; index++) {
+    const input = byId(`account-${index}`);
+    const value = input?.value.trim() || "";
 
-/* ==========================================
-   BAGIAN 4/8 — SUBKATEGORI, PRODUK & FORM
-========================================== */
+    if (!value) {
+      input?.focus();
+      toast(`Isi ${fields[index]} terlebih dahulu.`);
+      return null;
+    }
+    values.push(`${fields[index]}: ${value}`);
+  }
 
-function getGameProducts(game) {
-  if (!game) return {};
-  return PRODUCT_DATA[game.id.toLowerCase()] || {};
+  return values.join(" | ");
 }
 
 function renderSubcategories() {
-  const container = $("subcategoryList");
-  if (!container || !selectedGame) return;
+  const groups = getProductGroups();
+  const names = Object.keys(groups);
+  const container = byId("subcategoryList");
 
-  const categories = Object.keys(getGameProducts(selectedGame));
-
-  if (!categories.length) {
+  if (!names.length) {
     container.innerHTML =
-      `<p class="small-note">Daftar produk untuk game ini belum dimasukkan.</p>`;
+      `<span class="small-note">Produk untuk layanan ini belum tersedia.</span>`;
     return;
   }
 
-  container.innerHTML = `
-    <button type="button"
-      class="subcategory-button ${selectedSubcategory === "all" ? "active" : ""}"
-      data-subcategory="all">Semua</button>
-    ${categories.map(name => `
-      <button type="button"
-        class="subcategory-button ${selectedSubcategory === name ? "active" : ""}"
-        data-subcategory="${escapeHTML(name)}">
-        ${escapeHTML(name)}
-      </button>
-    `).join("")}
-  `;
+  const buttons = ["all", ...names];
+  container.innerHTML = buttons.map(name => `
+    <button class="subcategory-button ${currentSubcategory === name ? "active" : ""}"
+      type="button" data-subcategory="${safe(name)}">
+      ${name === "all" ? "Semua" : safe(name)}
+    </button>
+  `).join("");
 
   container.querySelectorAll("[data-subcategory]").forEach(button => {
     button.addEventListener("click", () => {
-      selectedSubcategory = button.dataset.subcategory;
+      currentSubcategory = button.dataset.subcategory;
       renderSubcategories();
       renderProducts();
     });
@@ -457,181 +642,119 @@ function renderSubcategories() {
 }
 
 function renderProducts() {
-  const container = $("productGrid");
-  if (!container || !selectedGame) return;
+  const groups = getProductGroups();
+  const names = Object.keys(groups);
+  const visibleNames = currentSubcategory === "all"
+    ? names
+    : names.filter(name => name === currentSubcategory);
 
-  const groups = getGameProducts(selectedGame);
-  const categoryNames = Object.keys(groups);
-
-  const visibleGroups = selectedSubcategory === "all"
-    ? categoryNames
-    : categoryNames.filter(name => name === selectedSubcategory);
-
-  const products = visibleGroups.flatMap(category =>
-    (groups[category] || []).map(product => ({
+  const products = visibleNames.flatMap(group =>
+    (groups[group] || []).map(product => ({
       name: product[0],
       price: Number(product[1]),
-      category
+      group
     }))
   );
+
+  const container = byId("productGrid");
 
   if (!products.length) {
     container.innerHTML = `
       <div class="empty-state">
         <h3>Produk belum tersedia</h3>
-        <p>Daftar produk untuk game ini belum dimasukkan ke katalog.</p>
+        <p>Daftar harga untuk ${safe(currentGame[1])} belum dimasukkan.</p>
       </div>`;
     return;
   }
 
   container.innerHTML = products.map((product, index) => `
     <button type="button"
-      class="product-card ${selectedProduct?.name === product.name ? "selected" : ""}"
+      class="product-card ${currentProduct?.name === product.name ? "selected" : ""}"
       data-product-index="${index}">
-      <strong>${escapeHTML(product.name)}</strong>
-      <span class="product-price">${rupiah(product.price)}</span>
-      <span class="small-note">${escapeHTML(product.category)}</span>
+      <strong>${safe(product.name)}</strong>
+      <span class="product-price">${money(product.price)}</span>
+      <small class="small-note">${safe(product.group)}</small>
     </button>
   `).join("");
 
   container.querySelectorAll("[data-product-index]").forEach(button => {
     button.addEventListener("click", () => {
-      selectedProduct = products[Number(button.dataset.productIndex)];
+      currentProduct = products[Number(button.dataset.productIndex)];
       renderProducts();
       updateSummary();
     });
   });
 }
 
-function renderAccountFields() {
-  const container = $("gameAccountFields");
-  if (!container || !selectedGame) return;
-
-  container.innerHTML = (selectedGame.fields || []).map((field, index) => {
-    const [label, type, placeholder] = field;
-    const id = `accountField${index}`;
-
-    return `
-      <label for="${id}">
-        ${escapeHTML(label)}
-        <input id="${id}" type="${escapeHTML(type)}"
-          placeholder="${escapeHTML(placeholder)}"
-          autocomplete="off" required>
-      </label>`;
-  }).join("");
-}
-
-function getAccountData() {
-  if (!selectedGame) return null;
-
-  const values = [];
-  const fields = selectedGame.fields || [];
-
-  for (let i = 0; i < fields.length; i++) {
-    const input = $(`accountField${i}`);
-    const value = input?.value.trim() || "";
-
-    if (!value) {
-      input?.focus();
-      showToast(`Isi ${fields[i][0]} terlebih dahulu.`);
-      return null;
-    }
-
-    values.push(`${fields[i][0]}: ${value}`);
-  }
-
-  return values.join(" | ");
-}
-
 /* ==========================================
-   BAGIAN 5/8 — RINGKASAN & DISKON
+   KODE DISKON & RINGKASAN
 ========================================== */
 
-function calculateDiscount(price) {
-  if (!discountApplied) return 0;
+function getDiscount(price) {
+  if (!discountIsActive || !currentProduct) return 0;
 
-  if (STORE_CONFIG.discountType === "percent") {
-    return Math.min(
-      price,
-      Math.round(price * STORE_CONFIG.discountValue / 100)
-    );
+  if (DISCOUNT_CONFIG.type === "percent") {
+    return Math.min(price, Math.round(price * DISCOUNT_CONFIG.value / 100));
   }
 
-  return Math.min(price, STORE_CONFIG.discountValue);
+  return Math.min(price, DISCOUNT_CONFIG.value);
 }
 
 function updateSummary() {
-  const price = selectedProduct?.price || 0;
-  discountAmount = calculateDiscount(price);
-  const total = Math.max(0, price - discountAmount);
+  const price = currentProduct?.price || 0;
+  const discount = getDiscount(price);
 
-  if ($("summaryProduct")) {
-    $("summaryProduct").textContent =
-      selectedProduct?.name || "Belum dipilih";
-  }
-  if ($("summaryPrice")) $("summaryPrice").textContent = rupiah(price);
-  if ($("summaryDiscount")) $("summaryDiscount").textContent = rupiah(discountAmount);
-  if ($("summaryTotal")) $("summaryTotal").textContent = rupiah(total);
-
-  if ($("continueCheckoutButton")) {
-    $("continueCheckoutButton").disabled = !selectedProduct;
-  }
+  byId("summaryProduct").textContent = currentProduct?.name || "Belum dipilih";
+  byId("summaryPrice").textContent = money(price);
+  byId("summaryDiscount").textContent = money(discount);
+  byId("summaryTotal").textContent = money(price - discount);
+  byId("continueCheckoutButton").disabled = !currentProduct;
 }
 
-$("applyDiscountButton")?.addEventListener("click", () => {
-  const input = $("discountCodeInput");
-  const code = (input?.value || "").trim().toUpperCase();
+byId("applyDiscountButton").addEventListener("click", () => {
+  const code = byId("discountCodeInput").value.trim().toUpperCase();
 
-  if (code !== STORE_CONFIG.discountCode.toUpperCase()) {
-    discountApplied = false;
-    discountAmount = 0;
-    if ($("discountMessage")) {
-      $("discountMessage").textContent = "Kode diskon tidak valid.";
-    }
+  if (!currentProduct) {
+    toast("Pilih produk terlebih dahulu.");
+    return;
+  }
+
+  if (code !== DISCOUNT_CONFIG.code.toUpperCase()) {
+    discountIsActive = false;
+    byId("discountMessage").textContent = "Kode diskon tidak valid.";
     updateSummary();
     return;
   }
 
-  if (!selectedProduct) {
-    showToast("Pilih produk terlebih dahulu.");
-    return;
-  }
-
-  discountApplied = true;
+  discountIsActive = true;
   updateSummary();
-
-  if ($("discountMessage")) {
-    $("discountMessage").textContent =
-      `Kode berhasil digunakan. Potongan ${rupiah(discountAmount)}.`;
-  }
+  byId("discountMessage").textContent =
+    `Kode berhasil digunakan. Potongan ${money(getDiscount(currentProduct.price))}.`;
 });
 
-$("continueCheckoutButton")?.addEventListener("click", () => {
-  if (!selectedProduct) {
-    showToast("Pilih produk terlebih dahulu.");
-    return;
-  }
+byId("continueCheckoutButton").addEventListener("click", () => {
+  if (!currentProduct || !currentGame) return;
 
-  const account = getAccountData();
+  const account = readAccountFields();
   if (!account) return;
 
-  const price = selectedProduct.price;
-  const discount = calculateDiscount(price);
+  const discount = getDiscount(currentProduct.price);
+  const total = currentProduct.price - discount;
 
-  $("checkoutGame").textContent = selectedGame.name;
-  $("checkoutProduct").textContent = selectedProduct.name;
-  $("checkoutAccount").textContent = account;
-  $("checkoutPrice").textContent = rupiah(price);
-  $("checkoutDiscountCode").textContent =
-    discountApplied ? STORE_CONFIG.discountCode : "-";
-  $("checkoutDiscount").textContent = rupiah(discount);
-  $("checkoutTotal").textContent = rupiah(price - discount);
+  byId("checkoutGame").textContent = currentGame[1];
+  byId("checkoutProduct").textContent = currentProduct.name;
+  byId("checkoutAccount").textContent = account;
+  byId("checkoutPrice").textContent = money(currentProduct.price);
+  byId("checkoutDiscountCode").textContent =
+    discountIsActive ? DISCOUNT_CONFIG.code : "-";
+  byId("checkoutDiscount").textContent = money(discount);
+  byId("checkoutTotal").textContent = money(total);
 
   showPage("checkoutPage");
 });
 
 /* ==========================================
-   BAGIAN 6/8 — PESANAN, QRIS & WHATSAPP
+   BAGIAN 5/5 — PESANAN & PENYIMPANAN LOKAL
 ========================================== */
 
 function loadOrders() {
@@ -646,31 +769,59 @@ function saveOrders(orders) {
   localStorage.setItem("gotopup_orders", JSON.stringify(orders));
 }
 
-function makeOrderId() {
-  return "GOT" + Date.now().toString().slice(-9);
+function toast(message) {
+  const element = byId("toastMessage");
+  element.textContent = message;
+  element.classList.add("show");
+
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => element.classList.remove("show"), 2600);
 }
 
-$("createOrderButton")?.addEventListener("click", () => {
-  if (!selectedGame || !selectedProduct) {
-    showToast("Pilih game dan produk terlebih dahulu.");
+function openModal(id) {
+  const modal = byId(id);
+  if (!modal) return;
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeModal(id) {
+  const modal = byId(id);
+  if (!modal) return;
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+document.addEventListener("click", event => {
+  const close = event.target.closest("[data-close-modal]");
+  if (close) closeModal(close.dataset.closeModal);
+
+  if (event.target.classList.contains("modal-overlay")) {
+    closeModal(event.target.id);
+  }
+});
+
+byId("createOrderButton").addEventListener("click", () => {
+  if (!currentGame || !currentProduct) {
+    toast("Pilih produk terlebih dahulu.");
     return;
   }
 
-  const account = getAccountData();
+  const account = readAccountFields();
   if (!account) return;
 
-  const price = selectedProduct.price;
-  const discount = calculateDiscount(price);
+  const discount = getDiscount(currentProduct.price);
+  const total = currentProduct.price - discount;
 
   currentOrder = {
-    id: makeOrderId(),
+    id: "GOT" + Date.now(),
     date: new Date().toLocaleString("id-ID"),
-    game: selectedGame.name,
-    product: selectedProduct.name,
+    game: currentGame[1],
+    product: currentProduct.name,
     account,
-    price,
+    price: currentProduct.price,
     discount,
-    total: price - discount,
+    total,
     status: "Menunggu konfirmasi manual"
   };
 
@@ -678,11 +829,11 @@ $("createOrderButton")?.addEventListener("click", () => {
   orders.unshift(currentOrder);
   saveOrders(orders);
 
-  $("paymentModalInfo").innerHTML = `
-    <strong>ID Pesanan:</strong> ${escapeHTML(currentOrder.id)}<br>
-    <strong>Game:</strong> ${escapeHTML(currentOrder.game)}<br>
-    <strong>Produk:</strong> ${escapeHTML(currentOrder.product)}<br>
-    <strong>Total:</strong> ${rupiah(currentOrder.total)}
+  byId("paymentModalInfo").innerHTML = `
+    <strong>ID Pesanan:</strong> ${safe(currentOrder.id)}<br>
+    <strong>Game:</strong> ${safe(currentOrder.game)}<br>
+    <strong>Produk:</strong> ${safe(currentOrder.product)}<br>
+    <strong>Total:</strong> ${money(currentOrder.total)}
   `;
 
   const message = [
@@ -690,171 +841,124 @@ $("createOrderButton")?.addEventListener("click", () => {
     `ID Pesanan: ${currentOrder.id}`,
     `Game: ${currentOrder.game}`,
     `Produk: ${currentOrder.product}`,
-    `Data Akun: ${currentOrder.account}`,
-    `Total: ${rupiah(currentOrder.total)}`,
+    `Data akun: ${currentOrder.account}`,
+    `Total: ${money(currentOrder.total)}`,
     "Saya sudah melakukan pembayaran QRIS. Mohon dicek."
   ].join("\n");
 
-  $("paymentWhatsappLink").href =
-    `https://wa.me/${STORE_CONFIG.paymentWhatsapp}?text=${encodeURIComponent(message)}`;
+  byId("paymentWhatsappLink").href =
+    `https://wa.me/${CONFIG.paymentWhatsApp}?text=${encodeURIComponent(message)}`;
 
+  renderOrders();
   openModal("paymentModal");
-  renderOrderHistory();
 });
 
-function renderOrderHistory() {
-  const container = $("orderHistoryList");
+function renderOrders() {
+  const container = byId("orderHistoryList");
   if (!container) return;
 
   const orders = loadOrders();
 
-  if (!orders.length) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <span>📋</span>
+  container.innerHTML = orders.length
+    ? orders.map(order => `
+      <article class="order-history-card">
+        <strong>${safe(order.game)}</strong>
+        <p>${safe(order.product)}</p>
+        <p>ID: ${safe(order.id)}</p>
+        <strong>${money(order.total)}</strong>
+        <p class="order-status">${safe(order.status)}</p>
+        <small class="small-note">${safe(order.date)}</small>
+      </article>
+    `).join("")
+    : `<div class="empty-state">
         <h3>Belum Ada Pesanan</h3>
         <p>Pesanan kamu akan muncul di sini.</p>
       </div>`;
-    return;
-  }
-
-  container.innerHTML = orders.map(order => `
-    <div class="order-history-card">
-      <strong>${escapeHTML(order.game)}</strong>
-      <p>${escapeHTML(order.product)}</p>
-      <p>${escapeHTML(order.id)}</p>
-      <p>${rupiah(order.total)}</p>
-      <span class="order-status">${escapeHTML(order.status)}</span>
-      <p class="small-note">${escapeHTML(order.date)}</p>
-    </div>
-  `).join("");
 }
 
 /* ==========================================
-   BAGIAN 7/8 — MODAL, NOTIFIKASI & SLIDER
+   INFO DISKON & INFORMASI TOKO
 ========================================== */
 
-function openModal(id) {
-  const modal = $(id);
-  if (!modal) return;
-  modal.classList.add("show");
-  modal.setAttribute("aria-hidden", "false");
-}
-
-function closeModal(id) {
-  const modal = $(id);
-  if (!modal) return;
-  modal.classList.remove("show");
-  modal.setAttribute("aria-hidden", "true");
-}
-
-function showToast(message) {
-  const toast = $("toastMessage");
-  if (!toast) return;
-
-  toast.textContent = message;
-  toast.classList.add("show");
-
-  clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2600);
-}
-
-$("showDiscountInfoButton")?.addEventListener("click", () => {
+byId("showDiscountInfoButton").addEventListener("click", () => {
+  byId("discountCodeDisplay").textContent = DISCOUNT_CONFIG.code;
   openModal("discountInfoModal");
 });
 
-$("showStoreInfoButton")?.addEventListener("click", () => {
-  openModal("storeInfoModal");
-});
-
-$("copyDiscountButton")?.addEventListener("click", async () => {
+byId("copyDiscountButton").addEventListener("click", async () => {
   try {
-    await navigator.clipboard.writeText(STORE_CONFIG.discountCode);
-    showToast("Kode diskon berhasil disalin.");
+    await navigator.clipboard.writeText(DISCOUNT_CONFIG.code);
+    toast("Kode diskon berhasil disalin.");
   } catch {
-    showToast(`Kode diskon: ${STORE_CONFIG.discountCode}`);
+    toast(`Kode diskon: ${DISCOUNT_CONFIG.code}`);
   }
 });
 
-document.querySelectorAll(".modal-overlay").forEach(modal => {
-  modal.addEventListener("click", event => {
-    if (event.target === modal) closeModal(modal.id);
-  });
+byId("showStoreInfoButton").addEventListener("click", () => {
+  openModal("storeInfoModal");
 });
 
-function initBannerSlider() {
-  const track = $("bannerTrack");
-  const dots = $("bannerDots");
+/* ==========================================
+   SLIDER BANNER OTOMATIS
+========================================== */
+
+function initSlider() {
+  const track = byId("bannerTrack");
+  const dots = byId("bannerDots");
   if (!track || !dots) return;
 
   const slides = [...track.querySelectorAll(".banner-slide")];
-  if (slides.length <= 1) return;
+  if (slides.length < 2) return;
 
   dots.innerHTML = slides.map((_, index) => `
-    <button type="button" class="banner-dot ${index === 0 ? "active" : ""}"
-      aria-label="Banner ${index + 1}" data-banner-index="${index}">
+    <button type="button"
+      class="banner-dot ${index === 0 ? "active" : ""}"
+      data-dot="${index}" aria-label="Banner ${index + 1}">
     </button>
   `).join("");
 
-  function goToBanner(index) {
-    currentBanner = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${currentBanner * 100}%)`;
+  function moveTo(index) {
+    bannerIndex = (index + slides.length) % slides.length;
+    track.style.transform = `translateX(-${bannerIndex * 100}%)`;
 
     dots.querySelectorAll(".banner-dot").forEach((dot, i) => {
-      dot.classList.toggle("active", i === currentBanner);
+      dot.classList.toggle("active", i === bannerIndex);
     });
   }
 
   dots.addEventListener("click", event => {
-    const button = event.target.closest("[data-banner-index]");
+    const button = event.target.closest("[data-dot]");
     if (!button) return;
 
-    goToBanner(Number(button.dataset.bannerIndex));
-    clearInterval(bannerTimer);
-    bannerTimer = setInterval(
-      () => goToBanner(currentBanner + 1),
-      STORE_CONFIG.sliderInterval
+    moveTo(Number(button.dataset.dot));
+    clearInterval(bannerInterval);
+    bannerInterval = setInterval(
+      () => moveTo(bannerIndex + 1),
+      CONFIG.bannerInterval
     );
   });
 
-  clearInterval(bannerTimer);
-  bannerTimer = setInterval(
-    () => goToBanner(currentBanner + 1),
-    STORE_CONFIG.sliderInterval
+  clearInterval(bannerInterval);
+  bannerInterval = setInterval(
+    () => moveTo(bannerIndex + 1),
+    CONFIG.bannerInterval
   );
 }
 
 /* ==========================================
-   BAGIAN 8/8 — INISIALISASI
+   MULAI TOKO
 ========================================== */
 
 function initStore() {
-  renderPopularGames();
-  renderOrderHistory();
-  initBannerSlider();
+  renderHome();
+  renderOrders();
+  initSlider();
 
-  // Pastikan tombol navigasi selalu mengarah ke halaman yang benar.
-  document.querySelectorAll(".nav-item").forEach(button => {
-    if (button.dataset.page === "gamePage") {
-      button.setAttribute("aria-label", "Pilih Game");
-    }
+  byId("discountCodeDisplay").textContent = DISCOUNT_CONFIG.code;
+
+  document.querySelectorAll(".help-button, .floating-help").forEach(link => {
+    link.href = `https://wa.me/${CONFIG.helpWhatsApp}`;
   });
-
-  // Link bantuan menggunakan nomor khusus pusat bantuan.
-  document.querySelectorAll(
-    '.header-help, .floating-help, a[href*="6283130951231"]'
-  ).forEach(link => {
-    link.href = `https://wa.me/${STORE_CONFIG.helpWhatsapp}`;
-  });
-
-  // Link pembayaran memakai nomor khusus konfirmasi pembayaran.
-  const paymentLink = $("paymentWhatsappLink");
-  if (paymentLink && !currentOrder) {
-    paymentLink.href = `https://wa.me/${STORE_CONFIG.paymentWhatsapp}`;
-  }
 }
 
 document.addEventListener("DOMContentLoaded", initStore);
-
