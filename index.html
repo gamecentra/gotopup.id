@@ -1,253 +1,233 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>GOTOPUP.ID - Top Up Game</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <!-- HEADER -->
   <header class="header">
     <div class="brand">
-      <img src="images/logo.jpg" alt="Logo GOTOPUP.ID" class="logo">
-      <div class="brand-text">
-        <h2>GOTOPUP.ID</h2>
-        <span>Top Up Cepat & Aman</span>
-      </div>
-    </div>
+      <img src="logo.jpg"
+           alt="GOTOPUP.ID"
+           class="logo">
 
-    <div class="country">
-      <img src="https://flagcdn.com/w40/id.png" alt="Indonesia">
-      <span>ID</span>
+      <div class="brand-text">
+        <h1>GOTOPUP.ID</h1>
+        <p>Top Up Game & Entertainment</p>
+      </div>
+
+      <img src="https://flagcdn.com/w40/id.png"
+           alt="Indonesia"
+           class="flag">
     </div>
   </header>
 
-  <!-- NAVIGASI -->
-  <nav class="navbar">
-    <button class="nav-btn active" data-page="home">Halaman</button>
-    <button class="nav-btn" data-page="form">Form Data</button>
-    <button class="nav-btn" data-page="history">Riwayat</button>
-    <button class="nav-btn" data-page="account">Akun</button>
-  </nav>
+  <!-- NOTIFIKASI -->
+  <div class="announcement">
+    <div class="announcement-text">
+      WARKODE DISKON • WDP • MEMBERSHIP
+      MENJADI 5 PERAK!
+    </div>
+  </div>
 
-  <main>
+  <!-- HALAMAN UTAMA -->
+  <main id="page-home" class="page active">
 
-    <!-- HALAMAN UTAMA -->
-    <section id="home" class="page active">
+    <!-- BANNER SLIDER -->
+    <section class="banner-section">
+      <div class="banner-slider" id="bannerSlider">
 
-      <!-- NOTIFIKASI -->
-      <div class="notice">
-        <span class="notice-icon">📢</span>
-        <div class="notice-text">
-          Jangan lupa cek WARKODE DISKON, WDP MEMBERSHIP
-          dan promo GOTOPUP.ID!
+        <div class="banner-track">
+          <img src="banner1.png" alt="Banner 1">
+          <img src="banner2.png" alt="Banner 2">
+          <img src="banner3.png" alt="Banner 3">
+          <img src="banner4.png" alt="Banner 4">
         </div>
+
       </div>
-
-      <!-- BANNER SLIDER -->
-      <div class="banner-container">
-        <div class="banner-slider" id="bannerSlider">
-          <img src="images/banner1.png" alt="Banner 1">
-          <img src="images/banner2.png" alt="Banner 2">
-          <img src="images/banner3.png" alt="Banner 3">
-          <img src="images/banner4.png" alt="Banner 4">
-        </div>
-        <div class="banner-dots" id="bannerDots"></div>
-      </div>
-
-      <!-- PENCARIAN -->
-      <div class="search-box">
-        <span>⌕</span>
-        <input
-          type="text"
-          id="searchGame"
-          placeholder="Cari game atau entertainment..."
-        >
-      </div>
-
-      <!-- GAME POPULER -->
-      <section class="catalog-section">
-        <div class="section-heading">
-          <div>
-            <h2>Game Populer</h2>
-            <p>Pilih game favoritmu</p>
-          </div>
-          <button class="see-all" data-category="game">
-            Lihat Semua →
-          </button>
-        </div>
-        <div class="catalog-grid" id="popularGames"></div>
-      </section>
-
-      <!-- GAME PC -->
-      <section class="catalog-section">
-        <div class="section-heading">
-          <div>
-            <h2>Game PC</h2>
-            <p>Top up game PC</p>
-          </div>
-          <button class="see-all" data-category="pc">
-            Lihat Semua →
-          </button>
-        </div>
-        <div class="catalog-grid" id="popularPC"></div>
-      </section>
-
-      <!-- ENTERTAINMENT -->
-      <section class="catalog-section">
-        <div class="section-heading">
-          <div>
-            <h2>Entertainment</h2>
-            <p>Layanan digital pilihan</p>
-          </div>
-          <button class="see-all" data-category="entertainment">
-            Lihat Semua →
-          </button>
-        </div>
-        <div class="catalog-grid" id="popularEntertainment"></div>
-      </section>
-
-    </section>
-    
-    <!-- HALAMAN SEMUA KATALOG -->
-    <section id="catalogPage" class="page">
-      <button class="back-btn" id="backHome">← Kembali</button>
-      <h2 id="catalogTitle">Katalog</h2>
-      <div class="catalog-grid" id="allCatalog"></div>
     </section>
 
-    <!-- HALAMAN DETAIL TOP UP -->
-    <section id="detailPage" class="page">
-      <button class="back-btn" id="backCatalog">← Kembali</button>
+    <!-- KATEGORI -->
+    <section class="category-section">
+      <h2>Kategori</h2>
 
-      <div class="detail-card">
-        <div class="detail-header">
-          <img id="detailImage" src="" alt="Game">
-          <div>
-            <h2 id="detailName">Nama Game</h2>
-            <p>Top Up GOTOPUP.ID</p>
-          </div>
-        </div>
+      <div class="category-buttons">
+        <button data-category="game">
+          Game
+        </button>
 
-        <!-- FORM AKUN GAME -->
-        <div class="form-section">
-          <h3>Data Akun</h3>
-          <div id="gameForm"></div>
-        </div>
+        <button data-category="pc">
+          Game PC
+        </button>
 
-        <!-- PILIH NOMINAL -->
-        <div class="form-section">
-          <h3>Pilih Nominal</h3>
-          <div class="nominal-grid" id="nominalList"></div>
-        </div>
+        <button data-category="entertainment">
+          Entertainment
+        </button>
+      </div>
+    </section>
 
-        <!-- DISKON -->
+    <!-- KATALOG -->
+    <section class="catalog-section">
+      <div class="section-heading">
+        <h2>Game Populer</h2>
+
+        <button id="showAllGames">
+          Lihat Semua
+        </button>
+      </div>
+
+      <div id="catalogContainer"
+           class="catalog-grid">
+      </div>
+
+    </section>
+
+  </main>
+    <!-- DETAIL TOP UP -->
+  <section id="page-detail" class="page">
+    <button class="back-button" onclick="goHome()">
+      ← Kembali
+    </button>
+
+    <div class="product-detail">
+      <div class="product-info">
+        <img id="detailImage" src="logo.jpg" alt="">
+        <h2 id="detailName">Pilih Produk</h2>
+      </div>
+
+      <form id="topupForm">
+        <div id="formFields"></div>
+
+        <h3>Pilih Nominal</h3>
+        <div id="priceList" class="price-grid"></div>
+
         <div class="discount-box">
-          <h3>Kode Diskon</h3>
-          <div class="discount-input">
-            <input
-              type="text"
-              id="discountCode"
-              placeholder="Masukkan kode diskon"
-            >
-            <button id="applyDiscount">Pakai</button>
-          </div>
+          <input id="discountCode"
+                 placeholder="Kode diskon">
+          <button type="button"
+                  onclick="applyDiscount()">
+            Pakai
+          </button>
           <p id="discountMessage"></p>
         </div>
 
-        <!-- TOTAL -->
         <div class="total-box">
           <span>Total Pembayaran</span>
           <strong id="totalPrice">Rp0</strong>
         </div>
 
-        <button class="primary-btn" id="checkoutBtn">
+        <button type="button"
+                class="primary-button"
+                onclick="openPayment()">
           Lanjut Pembayaran
         </button>
-      </div>
-    </section>
+      </form>
+    </div>
+  </section>
 
-    <!-- FORM DATA -->
-    <section id="form" class="page">
-      <div class="page-title">
-        <h2>Form Data</h2>
-        <p>Periksa data akun sebelum pembayaran.</p>
-      </div>
-      <div class="content-card" id="savedFormData">
-        <p>Belum ada data pesanan.</p>
-      </div>
-    </section>
-
-    <!-- RIWAYAT -->
-    <section id="history" class="page">
-      <div class="page-title">
-        <h2>Riwayat Pesanan</h2>
-        <p>Daftar pesanan kamu.</p>
-      </div>
-      <div class="content-card" id="historyList">
-        <p>Belum ada riwayat pesanan.</p>
-      </div>
-    </section>
-
-    <!-- AKUN -->
-    <section id="account" class="page">
-      <div class="account-card">
-        <img src="images/logo.jpg" alt="GOTOPUP.ID">
-        <h2>GOTOPUP.ID</h2>
-        <p>Pengaturan dan informasi</p>
-      </div>
-
-      <div class="account-menu">
-        <button type="button">⚙️ Pengaturan</button>
-        <a href="https://wa.me/6283130951231"
-           target="_blank"
-           rel="noopener"
-           class="account-link">
-          🎧 Customer Service
-        </a>
-        <button type="button">🎁 Info Diskon</button>
-        <button type="button">📜 Kebijakan</button>
-      </div>
-    </section>
-    
-  </main>
-
-  <!-- POPUP PEMBAYARAN QRIS -->
-  <div class="modal" id="paymentModal">
+  <!-- PEMBAYARAN -->
+  <div id="paymentModal" class="modal">
     <div class="modal-content">
-      <button class="close-modal" id="closeModal" type="button">×</button>
+      <button class="modal-close"
+              onclick="closePayment()">×</button>
 
       <h2>Pembayaran QRIS</h2>
-      <p>Scan QR berikut untuk melakukan pembayaran.</p>
+      <img src="qris.png"
+           alt="QRIS"
+           class="qris-image">
 
-      <img
-        src="images/qris.png"
-        alt="QRIS GOTOPUP.ID"
-        class="qris-image"
-      >
+      <p id="paymentAmount"></p>
 
-      <div class="payment-summary">
-        <span>Total Pembayaran</span>
-        <strong id="paymentPrice">Rp0</strong>
-      </div>
-
-      <p class="payment-note">
-        Pastikan nominal pembayaran sesuai.
-      </p>
-
-      <button class="primary-btn" id="confirmPayment" type="button">
-        Konfirmasi via WhatsApp
+      <button class="primary-button"
+              onclick="confirmPayment()">
+        Konfirmasi ke WhatsApp
       </button>
     </div>
   </div>
+    <!-- FROM DATA -->
+  <section id="page-formdata" class="page">
+    <h2>From Data</h2>
+    <div id="formDataContent"></div>
+  </section>
 
-  <footer class="footer">
-    <p>© 2026 GOTOPUP.ID</p>
-    <span>Top Up Game & Digital Entertainment</span>
-  </footer>
+  <!-- RIWAYAT -->
+  <section id="page-history" class="page">
+    <h2>Riwayat Transaksi</h2>
+    <div id="historyContent">
+      <p>Belum ada riwayat transaksi.</p>
+    </div>
+  </section>
+
+  <!-- AKUN -->
+  <section id="page-account" class="page">
+    <div class="account-logo">
+      <img src="logo.jpg" alt="GOTUPID">
+      <h2>GOTUPID</h2>
+    </div>
+
+    <div class="account-menu">
+      <button onclick="showAccountInfo('Pengaturan')">
+        Pengaturan
+      </button>
+
+      <button onclick="openCustomerService()">
+        Customer Service
+      </button>
+
+      <button onclick="showAccountInfo('Info Diskon')">
+        Info Diskon
+      </button>
+
+      <button onclick="showAccountInfo('Kebijakan')">
+        Kebijakan
+      </button>
+    </div>
+
+    <div id="accountInfo"></div>
+
+    <a class="cs-floating"
+       href="https://wa.me/6283130951231"
+       target="_blank"
+       aria-label="Customer Service">
+      ●
+    </a>
+  </section>
+    <!-- NAVIGASI BAWAH -->
+  <nav class="bottom-nav">
+    <button class="nav-item active"
+            onclick="navigatePage('home', this)">
+      <span>⌂</span>
+      <small>Halaman</small>
+    </button>
+
+    <button class="nav-item"
+            onclick="navigatePage('formdata', this)">
+      <span>▤</span>
+      <small>From Data</small>
+    </button>
+
+    <button class="nav-item"
+            onclick="navigatePage('history', this)">
+      <span>◷</span>
+      <small>Riwayat</small>
+    </button>
+
+    <button class="nav-item"
+            onclick="navigatePage('account', this)">
+      <span>♙</span>
+      <small>Akun</small>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast"></div>
 
   <script src="script.js"></script>
 </body>
